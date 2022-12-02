@@ -23,7 +23,7 @@ public class Restocker {
 		while (!(command.equals("exit"))) {
 			switch (command) {
 			case "0":
-				getMachineStatus(v.machineStatus);
+				getMachineStatus(v.getStatus());
 				break;
 			case "1":
 				setMachineStatus(v);
@@ -40,7 +40,7 @@ public class Restocker {
 	}
 
 	static void setMachineStatus(VendingMachine v) {
-		String setStatus, status = v.machineStatus;
+		String setStatus, status = v.getStatus();
 		
 		System.out.println("\n-Set Vending Machine Status");
 		do {
@@ -56,7 +56,7 @@ public class Restocker {
 				if (status.equals("Online")) {
 					System.out.println("Vending machine status is already set to Online");
 				} else {
-					v.machineStatus = "Online";
+					v.setStatus("Online");
 					System.out.println("Vending machine status set to Online");
 				}
 				break;
@@ -65,7 +65,7 @@ public class Restocker {
 					System.out.println("Vending machine status is already set to Restocking");
 				} else {
 					status = "Restocking";
-					v.machineStatus = status;
+					v.setStatus(status);
 					System.out.println("Vending machine status set to Restocking");
 				}
 				break;
@@ -94,29 +94,7 @@ public class Restocker {
 	}
 
 	static void startRestocker(ArrayList<VendingMachine> machines) {
-		Main.printMachineSelection();
-		String input;
-		input = scan.next();
 
-		while (!(input.equals("exit"))) {
-			boolean valid = false;
-
-			if (Integer.valueOf(input) <= machines.size())
-				valid = true;
-
-			if (valid) {
-				System.out.println("\n-Vending Machine #" + (Integer.valueOf(input)));
-				VendingMachine v = machines.get(Integer.valueOf(input) - 1);
-				chooseCommand(v);
-			} else {
-				System.out.println("Invalid Input. Try Again");
-			}
-
-			Main.printMachineSelection();
-			input = scan.next();
-		}
-
-		System.out.println();
 	}	
 }
 

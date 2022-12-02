@@ -7,44 +7,63 @@ import java.util.Scanner;
 
 public class VendingMachine {
 	static Scanner scan = new Scanner(System.in);
-	String machineStatus;
+	private String machineStatus;
+	private double credit;
+	String itemSelection;
+	private String machineLocation;
 
 	// List of Items in inventory
 	ArrayList<Items> inventory = new ArrayList<Items>();
 
 	// Contains all products purchased
 	ArrayList<String> history = new ArrayList<String>();
+	
+	//status mutators
+	String getStatus() {
+		return machineStatus;
+	}
+	
+	void setStatus(String status) {
+		machineStatus = status;
+	}
+	
+	//credit mutators
+	double getCredit() {
+		return credit;
+	}
+	
+	void setCredit(double num) {
+		credit = num;
+	}
+	
+	//location mutators
+	String getLocation() {
+		return machineLocation;
+	}
+	
+	void setLocation(String location) {
+		machineLocation = location;
+	}
 
+	
+	
 	// Loads Vending Machine
-	void setInventory() throws FileNotFoundException {
-		File file = new File("Inventory.txt");
-		Scanner items = new Scanner(file);
+	void setInventory(ArrayList<Items> availableStock){
 
-		String line;
+		String[] slots = {"A1","A2","A3","A4","B1","B2","B3","B4"};
 
-		while (items.hasNextLine()) {
-			line = items.nextLine();
-			String arr[] = line.split(",");
-			Items item = new Items();
-
-			// Instantiate item object
-			item.itemLocation = arr[0];
-			item.itemName = arr[1];
-			item.itemPrice = arr[2];
-			item.itemCount = Integer.valueOf(arr[3]);
-			item.expDate = arr[4];
-			item.itemStatus = arr[5];
-
-			// Insert data into array
-			inventory.add(item);
+		for( int i = 0; i < 8; i++){
+			availableStock.get(i).itemLocation = slots[i];
+			availableStock.get(i).present = true;
+			inventory.add(availableStock.get(i));
 		}
-
-		items.close();
 	}
 
 	public VendingMachine() throws FileNotFoundException {
 		machineStatus = "Online";
-		setInventory();
+		setInventory(Management.availableStock);
+		credit = 0.0;
+		itemSelection = "";
 	}
 
 }

@@ -2,7 +2,7 @@ package vendingmachine;
 
 public class Items {
 	//Stores where item is located in machine
-	String itemLocation;
+	String itemLocation = "";
 	
 	//stores the name of the product
 	String itemName;
@@ -18,4 +18,9 @@ public class Items {
 	
 	//stores item status
 	String itemStatus;
+	
+	//times purchased
+	int purchaseCount = 0;
+	
+	boolean present = false;
 }

@@ -1,76 +1,41 @@
 package vendingmachine;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Main {
 	static ArrayList<VendingMachine> machines = new ArrayList<VendingMachine>();
 	
-	static Scanner scan = new Scanner(System.in);                                                                                                              
-	
-	// Prints out interfaces to select from
-	static void printInterfaceSelection() {
-		System.out.println("Choose Interface:");
-		System.out.println("Customer UI type 'c'");
-		System.out.println("Restocker UI type 'r'");
-		System.out.println("Management UI type 'm'");
-		System.out.println("To exit type 'exit'");
-		System.out.print("User Input> ");
-	}
-	
-	static void printMachineSelection() {
-		System.out.println("Choose a Vending Machine:");
-		//Prints out the each vending machine to select from
-		for(int i = 0; i < machines.size(); i++) {
-			System.out.println("For Vending Machine #" + (i+1) + " press " + (i+1));
+	public static void printInventory(VendingMachine v) {
+		for(int i = 0; i < v.inventory.size(); i ++) {
+			System.out.println(String.format("%-9s %-15s %-10s %-13s", v.inventory.get(i).itemLocation,
+					v.inventory.get(i).itemName, "$" + v.inventory.get(i).itemPrice, v.inventory.get(i).itemCount) + "\n");
 		}
-		System.out.println("To Exit type exit");
-		System.out.print("User Input> ");
 	}
-	
-	public static void main(String[] args) throws IOException {
 
-		//Create Multiple Vending Machines 3 for now
-		for(int i = 0; i < 3; i++) {
+	public static void main(String[] args) throws FileNotFoundException, ParseException {
+
+		String[] locations = { "Moraga Way, Sacramento, CA 95826",
+				"Hornet Bookstore, 6000 Jed Smith Dr, Sacramento, CA 95819", "6002 J St, Sacramento, CA 95819" };
+		
+		Management.setStock();
+		
+		// Create Multiple Vending Machines 3 for now
+		for (int i = 0; i < 3; i++) {
 			VendingMachine v = new VendingMachine();
+			v.setLocation(locations[i]);
 			machines.add(v);
 		}
 		
-		// Display interface menu
-		String banner = "===========INTERFACE SELCTION MENU============";
-		System.out.println(banner);
-		printInterfaceSelection();
+		Management.setStock();
 
-		String choose = scan.next();
-
-		while (!(choose.equals("exit"))) {
-
-			switch (choose) {
-			// Customer
-			case ("c"):
-				System.out.println("\n==============CUSTOMER INTERFACE==============");
-				Customer.startCustomer(machines);
-				System.out.println(banner);
-				break;
-//			// Restocker
-			case ("r"):
-				System.out.println("\n==============RESTOCKER INTERFACE=============");
-				Restocker.startRestocker(machines);
-				System.out.println(banner);
-				break;
-			// Management
-			case ("m"):
-				System.out.println("\n============MANAGEMENT INTERFACE==============");
-				Management.startManagment(machines);
-				System.out.println(banner);
-				break;
-			default:
-				System.out.println("Invalid Input. Try Again.\n");
-			}
-			printInterfaceSelection();
-			choose = scan.next();
-		}
+		CustomerGUI frame = new CustomerGUI();
+		ManagementGUI frame2 = new ManagementGUI();
 
 	}
+
 }
