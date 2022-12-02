@@ -1,3 +1,4 @@
+package vendingmachine;
 /*
  * package vendingmachine;
  * 
