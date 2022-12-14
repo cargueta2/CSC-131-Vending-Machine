@@ -11,7 +11,7 @@ public class Items {
 	String itemPrice;
 	
 	//stores quantity of items
-	int itemCount;
+	int itemCount = 0;
 	
 	//stores the expiration item of product
 	String expDate;
@@ -22,5 +22,13 @@ public class Items {
 	//times purchased
 	int purchaseCount = 0;
 	
-	boolean present = false;
+	
+	public void copy(Items copy) {
+		itemLocation = copy.itemLocation;
+		itemName = copy.itemName;
+		itemPrice = copy.itemPrice;
+		itemCount = 10;
+		expDate = copy.expDate;
+		itemStatus = copy.itemStatus;
+	}
 }

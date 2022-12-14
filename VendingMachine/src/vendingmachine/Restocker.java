@@ -1,100 +1,78 @@
 package vendingmachine;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Restocker {
-	static Scanner scan = new Scanner(System.in);
+	//Returns the items in the remove list
+	public static String displayRemoveInstruction(VendingMachine v) {
+		String str = "";
 
-	static void printCommands() {
-		System.out.println("Choose Commnand:");
-		System.out.println("View Vending Machine Status press 0");
-		System.out.println("Set Vending Machine Status press 1");
-		System.out.println("To Exit type exit");
-		System.out.print("User Input>");
+		if (v.remove.size() == 0) {
+			return "No Current Instructions";
+		}
+		
+		str = str + String.format("%-9s %-15s %-5s", "Slot", "Name", "Quantity") + "\n";
+
+		for (int i = 0; i < v.remove.size(); i++) {
+			str = str + String.format("%-9s %-18s %-5s", v.remove.get(i).itemLocation, v.remove.get(i).itemName,
+					v.remove.get(i).itemCount) + "\n";
+
+		}
+
+		return str;
 	}
 	
-	static void chooseCommand(VendingMachine v) {
-		printCommands();
+	//Returns the items in the add list
+	public static String displayAddInstruction(VendingMachine v) {
+		String str = "";
 
-		String command;
-		command = scan.next();
-
-		while (!(command.equals("exit"))) {
-			switch (command) {
-			case "0":
-				getMachineStatus(v.getStatus());
-				break;
-			case "1":
-				setMachineStatus(v);
-				break;
-			default:
-				System.out.println("Input Invalid. Try Again.");
-				break;
-			}
-			printCommands();
-			command = scan.next();
+		if (v.add.size() == 0) {
+			return "No Current Instructions";
 		}
 		
-		System.out.println();
-	}
+		str = str + String.format("%-9s %-15s %-5s", "Slot", "Name", "Quantity") + "\n";
 
-	static void setMachineStatus(VendingMachine v) {
-		String setStatus, status = v.getStatus();
-		
-		System.out.println("\n-Set Vending Machine Status");
-		do {
-			System.out.println("To set status to Online type 0");
-			System.out.println("To set status to Restocking type 1");
-			System.out.println("To exit type 2");
-			System.out.print("User Input>");
-
-			setStatus = scan.next();
-
-			switch (setStatus) {
-			case ("0"):
-				if (status.equals("Online")) {
-					System.out.println("Vending machine status is already set to Online");
-				} else {
-					v.setStatus("Online");
-					System.out.println("Vending machine status set to Online");
-				}
-				break;
-			case ("1"):
-				if (status.equals("Restocking")) {
-					System.out.println("Vending machine status is already set to Restocking");
-				} else {
-					status = "Restocking";
-					v.setStatus(status);
-					System.out.println("Vending machine status set to Restocking");
-				}
-				break;
-			default:
-				System.out.println("Invalid Input. Try Again.");
-				break;
-			}
-
-			System.out.println();
-
-		} while (!(setStatus.equals("2")));
-
-	}
-
-	static void getMachineStatus(String machineStatus) {
-		System.out.println("\n-View Machine Status");
-
-		if (machineStatus.equals("Online")) {
-			System.out.println("Vending Machine is Online");
-		} else if (machineStatus.equals("Restocking")) {
-			System.out.println("Vending Machine is currently being Restocked");
-		} else {
-			System.out.println("Vending Machine is Offline");
+		for (int i = 0; i < v.add.size(); i++) {
+			str = str + String.format("%-9s %-18s %-5s", v.add.get(i).itemLocation, v.add.get(i).itemName,
+					v.add.get(i).itemCount) + "\n";
 		}
-		System.out.println();
+
+		return str;
+	}
+	
+	//Sets the machine status
+	public static void setMachineStatus(String status, VendingMachine v) {
+		v.setStatus(status);
+	}
+	
+	//updates the inventory of machine
+	public static void updateItems(VendingMachine v) {
+		int purchaseCount = 0;
+		
+		//inserts items in add list into inventory
+		for (int i = 0; i < v.add.size(); i++) {
+			
+			for(int j = 0; j < v.inventory.size(); j++) {
+				if(v.inventory.get(j).itemName.equals(v.add.get(i).itemName))
+					purchaseCount = v.inventory.get(j).purchaseCount;
+			}
+			
+			v.inventory.get(i).copy(v.add.get(i));
+			
+			
+			v.inventory.get(i).purchaseCount = purchaseCount;
+			
+			if(!(v.add.get(i).itemStatus.equals("OK")))
+				v.inventory.get(i).expDate = "2/23/23";
+			
+			v.inventory.get(i).itemCount = 10;
+		}
+		
+		//clears remove and add list
+		v.remove.clear();
+		v.add.clear();
 	}
 
-	static void startRestocker(ArrayList<VendingMachine> machines) {
-
-	}	
 }
-

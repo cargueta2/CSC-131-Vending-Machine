@@ -2,11 +2,12 @@ package vendingmachine;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class VendingMachine {
-	static Scanner scan = new Scanner(System.in);
+	
 	private String machineStatus;
 	private double credit;
 	String itemSelection;
@@ -17,6 +18,12 @@ public class VendingMachine {
 
 	// Contains all products purchased
 	ArrayList<String> history = new ArrayList<String>();
+	
+	//Contains items to be removed
+	ArrayList<Items> remove = new ArrayList<Items>();
+	
+	//Contains items to be added
+	ArrayList<Items> add = new ArrayList<Items>();
 	
 	//status mutators
 	String getStatus() {
@@ -53,13 +60,16 @@ public class VendingMachine {
 		String[] slots = {"A1","A2","A3","A4","B1","B2","B3","B4"};
 
 		for( int i = 0; i < 8; i++){
-			availableStock.get(i).itemLocation = slots[i];
-			availableStock.get(i).present = true;
-			inventory.add(availableStock.get(i));
+			Items temp = availableStock.get(i);
+			Items item = new Items();
+			item.copy(temp);
+			
+			item.itemLocation = slots[i];
+			inventory.add(item);
 		}
 	}
 
-	public VendingMachine() throws FileNotFoundException {
+	public VendingMachine() throws FileNotFoundException, ParseException {
 		machineStatus = "Online";
 		setInventory(Management.availableStock);
 		credit = 0.0;

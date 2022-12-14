@@ -9,34 +9,37 @@ import java.util.TimerTask;
 
 public class CustomerGUI extends JFrame {
 	static String itemSelection;
-
+	static JTabbedPane tabbedPane;
+	static JPanel panel1, panel2, panel3;
+	
 	public CustomerGUI(){
 		setTitle("Customer UI");
 
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 
-		JPanel panel1, panel2, panel3;
+		//JPanel panel1, panel2, panel3;
 
 		panel1 = new JPanel();
 		panel2 = new JPanel();
 		panel3 = new JPanel();
 
 		tabbedPane.addTab("Vending Machine #1", panel1);
-		addContent(panel1, Main.machines.get(0));
+		addContent(panel1, Management.machines.get(0));
 
 		tabbedPane.addTab("Vending Machine #2", panel2);
-		addContent(panel2, Main.machines.get(1));
+		addContent(panel2, Management.machines.get(1));
 
 		tabbedPane.addTab("Vending Machine #3", panel3);
-		addContent(panel3, Main.machines.get(2));
-
+		addContent(panel3, Management.machines.get(2));
+		
+		this.setResizable(false);
 		this.add(tabbedPane);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(600, 800);
 		this.setVisible(true);
 	}
 
-	public void addContent(JPanel panel, VendingMachine v) {
+	public static void addContent(JPanel panel, VendingMachine v) {
 		panel.setLayout(null);
 		// panel.setBackground(Color.white);
 		Font itemFont = new Font("Consolas", Font.BOLD, 18);
@@ -162,16 +165,19 @@ public class CustomerGUI extends JFrame {
 
 		//////////////////// Text Fields//////////////////
 		JTextField fundsOutput = new JTextField("Funds: $" + v.getCredit());
-		fundsOutput.setBounds(230, 500, 80, 30);
+		fundsOutput.setBounds(230, 500, 120, 30);
 		panel.add(fundsOutput);
+		fundsOutput.setEditable(false);
 
 		JTextArea output = new JTextArea("Please Select an Item> ");
 		output.setBounds(230, 550, 160, 60);
 		panel.add(output);
+		output.setEditable(false);
+		output.setLineWrap(true);
 
 		itemSelection = "";
 
-		///////////////////// Buttons//////////////////////////
+		///////////////////// Buttons//////////////
 		int size = 50;
 		int bGap = 5 + size;
 		int bStartX = 30;
@@ -221,12 +227,52 @@ public class CustomerGUI extends JFrame {
 		enter.addActionListener(e -> input(v, e.getActionCommand(), output, fundsOutput));
 
 		// Money
+		int start_X = 450;
+		int start_Y = 100;
+		int gap = 50;
+		
+		JButton fiftyDollars = new JButton("$50");
+		fiftyDollars.setFont(buttonFont);
+		panel.add(fiftyDollars);
+		fiftyDollars.addActionListener(e -> addFunds(v, fundsOutput, output, "50.0"));
+		fiftyDollars.setBounds(start_X, start_Y, fiftyDollars.getPreferredSize().width, fiftyDollars.getPreferredSize().height);
+		
+		JButton twentyDollars = new JButton("$20");
+		twentyDollars.setFont(buttonFont);
+		panel.add(twentyDollars);
+		twentyDollars.addActionListener(e -> addFunds(v, fundsOutput,output, "20.0"));
+		twentyDollars.setBounds(start_X, fiftyDollars.getY() + fiftyDollars.getPreferredSize().height + gap, twentyDollars.getPreferredSize().width, twentyDollars.getPreferredSize().height);
+		
+		JButton tenDollars = new JButton("$10");
+		tenDollars.setFont(buttonFont);
+		panel.add(tenDollars);
+		tenDollars.addActionListener(e -> addFunds(v, fundsOutput,output, "10.0"));
+		tenDollars.setBounds(start_X, twentyDollars.getY() + twentyDollars.getPreferredSize().height + gap, tenDollars.getPreferredSize().width, tenDollars.getPreferredSize().height);
+		
 		JButton fiveDollars = new JButton("$5");
-		fiveDollars.setBounds(450, 400, 77, size);
 		fiveDollars.setFont(buttonFont);
 		panel.add(fiveDollars);
-		fiveDollars.addActionListener(e -> addFunds(v, fundsOutput, "5.0"));
-
+		fiveDollars.addActionListener(e -> addFunds(v, fundsOutput,output, "5.0"));
+		fiveDollars.setBounds(start_X, tenDollars.getY() + tenDollars.getPreferredSize().height + gap, fiveDollars.getPreferredSize().width, fiveDollars.getPreferredSize().height);
+		
+		JButton oneDollars = new JButton("$1");
+		oneDollars.setFont(buttonFont);
+		panel.add(oneDollars);
+		oneDollars.addActionListener(e -> addFunds(v, fundsOutput,output, "1.0"));
+		oneDollars.setBounds(start_X, fiveDollars.getY() + fiveDollars.getPreferredSize().height + gap, oneDollars.getPreferredSize().width, oneDollars.getPreferredSize().height);
+		
+		JButton quarter = new JButton("$0.25");
+		quarter.setFont(buttonFont);
+		panel.add(quarter);
+		quarter.addActionListener(e -> addFunds(v, fundsOutput,output, "0.25"));
+		quarter.setBounds(start_X, oneDollars.getY() + oneDollars.getPreferredSize().height + gap, quarter.getPreferredSize().width, quarter.getPreferredSize().height);
+		
+		JButton dime = new JButton("$0.10");
+		dime.setFont(buttonFont);
+		panel.add(dime);
+		dime.addActionListener(e -> addFunds(v, fundsOutput,output, "0.1"));
+		dime.setBounds(start_X, quarter.getY() + quarter.getPreferredSize().height + gap, dime.getPreferredSize().width, dime.getPreferredSize().height);
+		
 		// Change
 		JButton change = new JButton("CHANGE");
 		change.setBounds(bStartX + 77 + 5, bStartY + bGap * 2, 77, size);
@@ -236,7 +282,7 @@ public class CustomerGUI extends JFrame {
 
 	}
 
-	public void changeBack(VendingMachine v, JTextArea output, JTextField fundsOuput) {
+	public static void changeBack(VendingMachine v, JTextArea output, JTextField fundsOuput) {
 		String message = "Change Back: " + v.getCredit() + "\n" + "Quarters: " + Customer.giveChangeBack(v);
 		fundsOuput.setText("Funds: $" + v.getCredit());
 		output.setText(message);
@@ -252,14 +298,27 @@ public class CustomerGUI extends JFrame {
 
 	}
 
-	public void addFunds(VendingMachine v, JTextField fundsOutput, String fund) {
-		Double credit = v.getCredit() + Double.parseDouble(fund);
-		v.setCredit(credit);
-		String updated = "Funds: $" + credit;
-		fundsOutput.setText(updated);
+	public static void addFunds(VendingMachine v, JTextField fundsOutput, JTextArea output, String fund) {
+
+		if(Customer.paymentValidity(fund) == true) {
+			Double credit = v.getCredit() + Double.parseDouble(fund);
+			v.setCredit(credit);
+			String updated = "Funds: $" + credit;
+			fundsOutput.setText(updated);
+		}else {
+			output.setText("Invalid Currency. Try Again.");
+			TimerTask task = new TimerTask() {
+				public void run() {
+					output.setText("Please Select Item>");
+				}
+			};
+
+			Timer timer = new Timer();
+			timer.schedule(task, 2000);
+		}
 	}
 
-	public void input(VendingMachine v, String button, JTextArea output, JTextField fundsOutput) {
+	public static void input(VendingMachine v, String button, JTextArea output, JTextField fundsOutput) {
 		if (!(button.equals("ENTER"))) {
 			v.itemSelection = v.itemSelection + button;
 			output.setText("Please Select an Item> " + v.itemSelection);
@@ -267,7 +326,8 @@ public class CustomerGUI extends JFrame {
 			if (Customer.validInput(v, v.itemSelection)) {
 				String message = Customer.purchaseItem(v, v.itemSelection);
 				output.setText(message);
-				addFunds(v, fundsOutput, "0");
+				addFunds(v, fundsOutput, output,"0.0");
+				
 			} else {
 				output.setText("Invalid Selection!\nTry again");
 			}
@@ -283,6 +343,22 @@ public class CustomerGUI extends JFrame {
 			v.itemSelection = "";
 		}
 
+	}
+	
+	public static void refreshPanels() throws ParseException {
+		tabbedPane.removeAll();
+		panel1.removeAll();
+		panel2.removeAll();
+		panel3.removeAll();
+		
+		tabbedPane.addTab("Vending Machine #1", panel1);
+		addContent(panel1, Management.machines.get(0));
+
+		tabbedPane.addTab("Vending Machine #2", panel2);
+		addContent(panel2, Management.machines.get(1));
+
+		tabbedPane.addTab("Vending Machine #3", panel3);
+		addContent(panel3, Management.machines.get(2));
 	}
 
 }
